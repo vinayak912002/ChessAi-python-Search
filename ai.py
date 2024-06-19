@@ -70,7 +70,7 @@ class Heuristics:
         bishops = Heuristics.get_piece_position_score(board, pieces.Bishop.PIECE_TYPE, Heuristics.BISHOP_TABLE)
         queens = Heuristics.get_piece_position_score(board, pieces.Queen.PIECE_TYPE, Heuristics.QUEEN_TABLE)
 
-        return material + knights + rooks + bishops + queens
+        return material + knights + rooks + bishops + queens + pawns
 
     #returns the score for the position of the given type of piece based on the table
     #the table is the 2-D numpy array
@@ -98,10 +98,11 @@ class Heuristics:
         for x in range(8):
             for y in range(8):
                 piece = board.chesspieces[x][y]
-                if(piece.color == pieces.Piece.WHITE):
-                    white += piece.value
-                else:
-                    black += piece.value
+                if(piece != 0):
+                    if(piece.color == pieces.Piece.WHITE):
+                        white += piece.value
+                    else:
+                        black += piece.value
         
         return white - black
     
@@ -163,7 +164,7 @@ class AI:
         
         else:
             best_score = AI.INFINITE
-            for move in board.get_possible_moves(pieces.Piece.WHITE):
+            for move in board.get_possible_moves(pieces.Piece.BLACK):
                 copy = board.Board.clone(board)
                 copy.perform_move(move)
 
@@ -180,7 +181,7 @@ class AI:
 
         if (maximizing):
             best_score = -AI.INFINITE
-            for move in chessboard.get_possible_moves(pieces.Piece.White):
+            for move in chessboard.get_possible_moves(pieces.Piece.WHITE):
                 copy = board.Board.clone(chessboard)
                 copy.perform_move(move)
 
@@ -191,7 +192,7 @@ class AI:
             return best_score
         else:
             best_score = AI.INFINITE
-            for move in chessboard.get_possible_moves(pieces.Piece.White):
+            for move in chessboard.get_possible_moves(pieces.Piece.BLACK):
                 copy = board.Board.clone(chessboard)
                 copy.perform_move(move)
 

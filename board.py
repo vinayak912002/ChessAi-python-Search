@@ -111,7 +111,7 @@ class Board:
         king_found = False
         for x in range(Board.WIDTH):
             for y in range(Board.HEIGHT):
-                piece = copy[x][y]
+                piece = copy.chesspieces[x][y]
                 if (piece != 0):
                     if (piece.color == color and piece.piece_type == pieces.King.PIECE_TYPE):
                         king_found = True

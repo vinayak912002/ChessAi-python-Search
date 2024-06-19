@@ -1,4 +1,4 @@
-import board, pieces
+import board, pieces, ai
 from move import Move
 
 def get_user_move():
@@ -17,11 +17,11 @@ def get_user_move():
         return get_user_move()
     
 #checking for the validity of the move
-def get_valid_user_move(board):
+def get_valid_user_move(board, color):
     while True:
         move = get_user_move()
         valid = False
-        possible_moves = board.get_possible_moves(pieces.Piece.WHITE)
+        possible_moves = board.get_possible_moves(color)
         
         #if there are no possible moves
         if(not possible_moves):
@@ -62,35 +62,72 @@ def letter_to_xpos(letter):
             raise ValueError("Invalid Letter")
 
 
+def mode(player_choice):
+    if (player_choice == 1):
+        return False
+    elif(player_choice == 2):
+        return True
+    else:
+        raise ValueError("invalid Choice")
+
 #Entry point
 
 board = board.Board.new()
 print(board.to_string())
+choice = int(input("enter choice(1/2)"))
 
 while(True):
-    white_move = get_valid_user_move(board)
-    if (white_move == 0):
-        if (board.is_check(piece.Piece.WHITE)):
-            print("Checkmate Black wins")
-            break
-        else:
-            print("stalemate")
-            break
-        
-    board.perform_move(white_move)
-    print("player 1 move "+ white_move.to_string())
-    print(board.to_string())
+    if (mode(choice)):
+        white_move = get_valid_user_move(board, pieces.Piece.WHITE)
+        if (white_move == 0):
+            if (board.is_check(piece.Piece.WHITE)):
+                print("Checkmate Black wins")
+                break
+            else:
+                print("stalemate")
+                break
+            
+        board.perform_move(white_move)
+        print("player 1 move "+ white_move.to_string())
+        print(board.to_string())
 
-    black_move = get_valid_user_move(board)
-    if (black_move == 0):
-        if (board.is_check(piece.Piece.BLACK)):
-            print("Checkmate white wins")
-            break
-        else:
-            print("stalemate")
-            break
-        
-    board.perform_move(black_move)
+        black_move = get_valid_user_move(board, pieces.Piece.BLACK)
+        if (black_move == 0):
+            if (board.is_check(piece.Piece.BLACK)):
+                print("Checkmate white wins")
+                break
+            else:
+                print("stalemate")
+                break
+            
+        board.perform_move(black_move)
 
-    print("player 2 move "+ black_move.to_string())
-    print(board.to_string())
+        print("player 2 move "+ black_move.to_string())
+        print(board.to_string())
+        
+    elif(not mode(choice)):
+        move = get_valid_user_move(board, pieces.Piece.WHITE)
+        if (move == 0):
+            if (board.is_check(piece.Piece.WHITE)):
+                print("Checkmate Black wins")
+                break
+            else:
+                print("stalemate")
+                break
+            
+        board.perform_move(move)
+        print("User move: " + move.to_string())
+        print(board.to_string())
+
+        ai_move = ai.AI.get_ai_move(board, [])
+        if (ai_move == 0):
+            if (board.is_check(pieces.Piece.BLACK)):
+                print("Checkmate!, White wins")
+                break
+            else:
+                print ("stalemate")
+                break
+
+        board.perform_move(ai_move)
+        print("AI move: " + ai_move.to_string())
+        print(board.to_string())
